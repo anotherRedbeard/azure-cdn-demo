@@ -1,0 +1,21 @@
+name: azure-cdn-demo
+metadata:
+  template: azure-cdn-demo@0.0.1-beta
+  description: Deploy a secure static assets pipeline with Azure Storage and Front Door.
+
+infra:
+  provider: bicep
+  path: ./infra/main.bicep
+  module: main
+  parameters:
+    location: ${AZURE_LOCATION}
+    rgName: ${AZURE_RESOURCE_GROUP}
+hooks:
+  #preprovision:
+  #  shell: sh
+  #  run: ./infra/pre_provision.sh
+  #  interactive: true
+  postdeploy:
+    shell: sh
+    run: ./infra/upload_blob.sh
+    interactive: true

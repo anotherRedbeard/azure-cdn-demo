@@ -34,3 +34,4 @@ output AZURE_RESOURCE_GROUP string = rg.name
 output STORAGE_ACCOUNT_NAME string = storage.outputs.storageAccountName
 output STATIC_ASSETS_CONTAINER_NAME string = storage.outputs.staticAssetsContainerName
 output CDN_ENDPOINT string = frontDoor.outputs.url
+output FRONT_DOOR_ENDPOINT_URL string = frontDoor.outputs.endpoint_url

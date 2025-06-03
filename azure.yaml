@@ -5,11 +5,11 @@ metadata:
 
 infra:
   provider: bicep
-  path: ./infra/main.bicep
+  path: ./infra
   module: main
   parameters:
     location: ${AZURE_LOCATION}
-    rgName: ${AZURE_RESOURCE_GROUP}
+    resourceGroupName: ${AZURE_RESOURCE_GROUP}
 hooks:
   #preprovision:
   #  shell: sh

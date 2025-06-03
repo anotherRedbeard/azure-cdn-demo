@@ -4,6 +4,13 @@
 echo "Resource Group: $AZURE_RESOURCE_GROUP"
 echo "Storage Account Name: $STORAGE_ACCOUNT_NAME"
 echo "Container Name: $STATIC_ASSETS_CONTAINER_NAME"
+echo "AFD Enpoint Url: $FRONT_DOOR_ENDPOINT_URL"
+
+# Disable all public network access for the storage account
+az storage account update \
+  --name $STORAGE_ACCOUNT_NAME \
+  --resource-group $AZURE_RESOURCE_GROUP \
+  --public-network-access Enabled
 
 # Get the storage account key
 STORAGE_ACCOUNT_KEY=$(az storage account keys list \
@@ -16,6 +23,7 @@ STORAGE_ACCOUNT_KEY=$(az storage account keys list \
 az storage blob upload \
   --account-name $STORAGE_ACCOUNT_NAME \
   --container-name $STATIC_ASSETS_CONTAINER_NAME \
+  --account-key $STORAGE_ACCOUNT_KEY \
   --file "./infra/pete.jpg" \
   --name "pete.jpg" --overwrite
 
@@ -23,6 +31,7 @@ az storage blob upload \
 az storage blob upload \
   --account-name $STORAGE_ACCOUNT_NAME \
   --container-name $STATIC_ASSETS_CONTAINER_NAME \
+  --account-key $STORAGE_ACCOUNT_KEY \
   --file "./infra/wilson.jpg" \
   --name "wilson.jpg" --overwrite
 
@@ -42,6 +51,10 @@ PRIVATE_ENDPOINT_CONNECTION_NAME=$(az network private-endpoint-connection list \
   --type Microsoft.Storage/storageAccounts \
   --query "[?properties.privateLinkServiceConnectionState.status=='Pending'].name" \
   -o tsv)
+
+echo "Test urls for static assets (you will still need the SAS token for access):  "
+echo "https://$FRONT_DOOR_ENDPOINT_URL/static-assets/pete.jpg?SASToken"
+echo "https://$FRONT_DOOR_ENDPOINT_URL/static-assets/wilson.jpg?SASToken"
   
 # Check if there's a pending connection
 if [ -z "$PRIVATE_ENDPOINT_CONNECTION_NAME" ]; then

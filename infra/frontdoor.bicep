@@ -86,3 +86,4 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2023-05-01' = {
 }
 
 output url string = 'https://${frontDoorEndpoint.name}.azurefd.net/'
+output endpoint_url string = frontDoorEndpoint.properties.hostName
